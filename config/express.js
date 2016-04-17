@@ -13,8 +13,8 @@ module.exports = function(app, config) {
   app.locals.ENV = env;
   app.locals.ENV_DEVELOPMENT = env == 'development';
   
-  // app.set('views', config.root + '/app/views');
-  // app.set('view engine', 'ejs');
+  app.set('views', config.root + '/app/views');
+  app.set('view engine', 'ejs');
   app.use(express.static(__dirname + '/public'))
 
   // app.use(favicon(config.root + '/public/img/favicon.ico'));
