@@ -58,9 +58,25 @@ function postUpdate(request, response, next) {
 };
 
 function postSearch(request, response, next) {
+	var searchResults = [];
 	Hackathon.searchByDevpostQuery(request.body.query)
 	.then(function (results) {
-		return response.json(results);
+		searchResults = results;
+		var promises = [];
+
+		searchResults.forEach(function (result) {
+			promises.push(Hackathon.findOne({slug: result.slug}).exec());
+		});
+
+		return Q.all(promises);
+	})
+	.then(function (results) {		var finalResults = [];
+		results.forEach(function (result, index) {
+			if (!result)
+				finalResults.push(searchResults[index]);
+		});
+
+		return response.json(finalResults);
 	})
 	.catch(function (error) {
 		return response.status(500).json({error: true});
