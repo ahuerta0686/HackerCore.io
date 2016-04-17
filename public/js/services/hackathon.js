@@ -16,7 +16,7 @@ function HackathonService($http, $q) {
 			slug: slug
 		};
 
-		$http.post(data)
+		$http.post('/api/hackathon/new', data)
 		.then(function (response) {
 			deferred.resolve(response.data);
 		})

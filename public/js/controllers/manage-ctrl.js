@@ -8,8 +8,20 @@ angular
 
 ManageCtrl.$inject = ['hackathonservice']
 
-function ManageCtrl() {
+function ManageCtrl(hackathonservice) {
 	var vm = this;
 
-	vm.test = "Hello";
+	vm.hackathon = "";
+	vm.addHackathon = addHackathon;
+
+	function addHackathon(hackathon) {
+		hackathonservice.addHackathon(hackathon)
+		.then(function (data) {
+			console.log(data);
+		})
+		.catch(function (data) {
+			console.log(data);
+		});
+	}
+
 }

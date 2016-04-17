@@ -4,13 +4,13 @@
       <div class="form-group">
         <label for="hackathon" class="control-label col-lg-3">Hackathon</label>
         <div class="col-lg-9">
-          <input type="text" class="form-control" id="hackathon">
+          <input type="text" class="form-control" id="hackathon" ng-model="vm.hackathon">
         </div>
       </div>
 
       <div class="form-group">
         <div class="col-sm-offset-3 col-sm-9">
-          <button type="button" class="btn btn-default">Add Hackathon</button>
+          <button type="button" class="btn btn-default" ng-click="vm.addHackathon(vm.hackathon)">Add Hackathon</button>
         </div>
       </div>
     </form>
