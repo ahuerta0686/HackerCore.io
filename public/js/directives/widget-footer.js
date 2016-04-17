@@ -3,7 +3,7 @@
  */
 
 angular
-    .module('RDash')
+    .module('HackerCore.io')
     .directive('rdWidgetFooter', rdWidgetFooter);
 
 function rdWidgetFooter() {

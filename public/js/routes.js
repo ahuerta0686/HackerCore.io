@@ -3,7 +3,7 @@
 /**
  * Route configuration for the RDash module.
  */
-angular.module('RDash').config(['$stateProvider', '$urlRouterProvider',
+angular.module('HackerCore.io').config(['$stateProvider', '$urlRouterProvider',
     function($stateProvider, $urlRouterProvider) {
 
         // For unmatched routes
@@ -18,6 +18,12 @@ angular.module('RDash').config(['$stateProvider', '$urlRouterProvider',
             .state('tables', {
                 url: '/tables',
                 templateUrl: 'templates/tables.html'
+            })
+            .state('manage', {
+                url: '/manage',
+                templateUrl: 'templates/manage.html',
+                controller: 'ManageCtrl',
+                controllerAs: 'vm'
             });
     }
 ]);

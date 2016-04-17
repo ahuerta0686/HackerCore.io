@@ -3,7 +3,7 @@
  */
 
 angular
-    .module('RDash')
+    .module('HackerCore.io')
     .controller('AlertsCtrl', ['$scope', AlertsCtrl]);
 
 function AlertsCtrl($scope) {

@@ -4,7 +4,7 @@
  */
 
 angular
-    .module('RDash')
+    .module('HackerCore.io')
     .directive('rdLoading', rdLoading);
 
 function rdLoading() {

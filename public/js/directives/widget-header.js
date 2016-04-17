@@ -3,7 +3,7 @@
  */
 
 angular
-    .module('RDash')
+    .module('HackerCore.io')
     .directive('rdWidgetHeader', rdWidgetTitle);
 
 function rdWidgetTitle() {
