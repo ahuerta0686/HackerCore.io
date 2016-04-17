@@ -19,6 +19,22 @@ angular.module('HackerCore.io').config(['$stateProvider', '$urlRouterProvider',
                 url: '/tables',
                 templateUrl: 'templates/tables.html'
             })
+            .state('popular-tags', {
+                url: '/popularTags',
+                templateUrl: 'templates/popularTags.html'
+            })
+            .state('winning-projects', {
+                url: '/winningProjects',
+                templateUrl: 'templates/winningProjects.html'
+            })
+            .state('calendar', {
+                url: '/calendar',
+                templateUrl: 'templates/calendar.html'
+            })
+            .state('unpopular-tags', {
+                url: '/unpopularTags',
+                templateUrl: 'templates/unpopularTags.html'
+            })
             .state('manage', {
                 url: '/manage',
                 templateUrl: 'templates/manage.html',
