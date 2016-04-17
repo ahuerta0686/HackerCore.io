@@ -45,4 +45,18 @@ HackathonSchema.statics.findByDevpostSlug = function (slug) {
 	return deferred.promise;
 };
 
+HackathonSchema.statics.searchByDevpostQuery = function (query) {
+	var deferred = Q.defer();
+
+	devpost.hackathon.search(query)
+	.then(function (results) {
+		deferred.resolve(results);
+	})
+	.catch(function (error) {
+		deferred.reject(results);
+	});
+
+	return deferred.promise;
+};
+
 mongoose.model('Hackathon', HackathonSchema);

@@ -1,18 +1,37 @@
+<div ng-show="vm.loading" class="busy-overlay"></div>
 <div class="row">
-  <div class="col-lg-6">
+  <div class="col-lg-12">
+    <h2>Search for Hackathons</h2>
+  </div>
+  <div class="col-lg-12">
     <form class="form-horizontal">
       <div class="form-group">
-        <label for="hackathon" class="control-label col-lg-3">Hackathon</label>
-        <div class="col-lg-9">
-          <input type="text" class="form-control" id="hackathon" ng-model="vm.hackathon">
+        <label for="hackathon" class="control-label col-lg-2">Hackathon</label>
+        <div class="col-lg-10">
+          <input type="text" class="form-control" id="hackathon" ng-model="vm.hackathonQuery">
         </div>
       </div>
 
       <div class="form-group">
-        <div class="col-sm-offset-3 col-sm-9">
-          <button type="button" class="btn btn-default" ng-click="vm.addHackathon(vm.hackathon)">Add Hackathon</button>
+        <div class="col-sm-offset-2 col-sm-9">
+          <button type="submit" class="btn btn-default" ng-click="vm.searchHackathons(vm.hackathonQuery)">Search Hackathons</button>
         </div>
       </div>
     </form>
+  </div>
+  <rd-loading ng-show="vm.loading"></rd-loading>
+  <div ng-show="vm.searchResults.length" class="col-lg-12">
+    <h2>Search Results</h2>
+    <p>Click a hackathon entry to import to HackerCore</p>
+    <p class="small">(If you cannot find something available on DevPost, it has probably already been added to HackerCore)</p>
+    <rd-widget ng-repeat="searchResult in vm.searchResults" ng-click="vm.addHackathon(searchResult.slug, $index)" class="clickable">
+      <rd-widget-body>
+        <div class="widget-icon white pull-left">
+          <img ng-src="{{ searchResult.imageUrl }}" class="img-responsive" />
+        </div>
+        <div class="title">{{ searchResult.title }}</div>
+        <div class="comment">{{ searchResult.description }}</div>
+      </rd-widget-body>
+    </rd-widget>
   </div>
 </div>

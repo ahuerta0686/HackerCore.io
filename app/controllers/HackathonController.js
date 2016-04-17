@@ -57,5 +57,16 @@ function postUpdate(request, response, next) {
 	});
 };
 
+function postSearch(request, response, next) {
+	Hackathon.searchByDevpostQuery(request.body.query)
+	.then(function (results) {
+		return response.json(results);
+	})
+	.catch(function (error) {
+		return response.status(500).json({error: true});
+	});
+};
+
 router.post('/new', postNew);
 router.post('/update', postUpdate);
+router.post('/search', postSearch);
