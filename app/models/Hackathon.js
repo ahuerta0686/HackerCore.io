@@ -9,7 +9,9 @@ var HackathonSchema = new Schema({
 	slug: { type: String, unique: true },
 	location: {
 		name: String,
-		address: String
+		address: String,
+		lat: Number,
+		lng: Number
 	},
     judges: [{
     	avatarUrl: String,

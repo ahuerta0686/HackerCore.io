@@ -2,13 +2,18 @@ var express = require('express'),
 	router = express.Router(),
 	mongoose = require('mongoose'),
 	Hackathon = mongoose.model('Hackathon'),
-	Q = require('q');
+	Q = require('q'),
+	rp = require('request-promise');
+
+var googleApiKey = 'AIzaSyDUQnw4P70FMsSsepIcA2Y32pirhn5o2Dc';
 
 module.exports = function (app) {
 	app.use('/api/hackathon', router);
 };
 
 function postNew(request, response, next) {
+	response.json({status: 'Job queued...'});
+
 	var Project = mongoose.model('Project');
 	Q.spread([
 		Hackathon.findByDevpostSlug(request.body.slug),
@@ -27,11 +32,37 @@ function postNew(request, response, next) {
 		return Q.all(promises);
 	})
 	.then(function (result) {
-		return response.json({success: true});
+		var geocodeUrl = 'https://maps.googleapis.com/maps/api/geocode/json?key=' + googleApiKey + '&address=';
+		var hackathon = result[0];
+		if (hackathon.location.address)
+			return rp(geocodeUrl + hackathon.location.address);
+		else if (hackathon.location.name.length)
+			return rp(geocodeUrl + hackathon.location.name);
+		else
+			request.user.pushNotification('Successfully retrieved hackathon and all of it\'s projects!', 'index');
+	})
+	.then(function (result) {
+		Hackathon.findOne({slug: request.body.slug}).exec(function (error, hackathon) {
+			if (error)
+				return next(error);
+
+			var jsonResult = JSON.parse(result);
+
+			if (jsonResult.results[0]) {
+				hackathon.location.lat = jsonResult.results[0].geometry.location.lat;
+				hackathon.location.lng = jsonResult.results[0].geometry.location.lng;
+			}
+			return hackathon.save();
+		});
+		// return response.json({success: true});
+	})
+	.then(function (result) {
+		request.user.pushNotification('Successfully retrieved hackathon and all of it\'s projects!', 'index');
 	})
 	.catch(function (error) {
 		console.log(error);
-		return response.status(500).json({error: true});
+		request.user.pushNotification('Unsuccessfully retrieved hackathon...', 'index');
+		// return response.status(500).json({error: true});
 	});
 };
 
@@ -70,7 +101,8 @@ function postSearch(request, response, next) {
 
 		return Q.all(promises);
 	})
-	.then(function (results) {		var finalResults = [];
+	.then(function (results) {		
+		var finalResults = [];
 		results.forEach(function (result, index) {
 			if (!result)
 				finalResults.push(searchResults[index]);
@@ -92,7 +124,34 @@ function getCount(request, response, next) {
 	});
 };
 
-router.post('/new', postNew);
+function getLocations(request, response, next) {
+	var output = [];
+
+	Hackathon.find().exec()
+	.then(function (hackathons) {
+		hackathons.forEach(function (hackathon) {
+			output.push({
+				lat: hackathon.location.lat,
+				lng: hackathon.location.lng
+			});
+		});
+
+		return response.json(output);
+	})
+	.catch(function (error) {
+		return response.status(500).json({error: true});
+	});
+}
+
+function loggedIn(request, response, next) {
+	if (request.user)
+		return next();
+	else
+		return response.json({error: 'Not logged in'});
+}
+
+router.post('/new', loggedIn, postNew);
 router.post('/update', postUpdate);
 router.post('/search', postSearch);
 router.get('/count', getCount);
+router.get('/locations', getLocations);

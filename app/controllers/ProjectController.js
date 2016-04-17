@@ -48,6 +48,36 @@ function postUpdate(request, response, next) {
 	});
 };
 
+function getCount(request, response, next) {
+	Project.count({}, function (error, count) {
+		if (error)
+			return next(error);
+
+		return response.json({count: count});
+	});
+};
+
+function getTags(request, response, next) {
+	Project.find().exec(function (error, projects) {
+		if (error)
+			return next(error);
+
+		var tags = {};
+		projects.forEach(function (project) {
+			var projectTags = [];
+			project.tags.forEach(function (tag) {
+				if (!tags[tag.text])
+					tags[tag.text] = 0;
+
+				tags[tag.text] += 1;
+			});
+		});
+
+		return response.json(tags);
+	});
+};
+
 router.post('/new', postNew);
 router.post('/update', postUpdate);
-// router.post('/new/byhackathon', postNewByHackathon);
+router.get('/count', getCount);
+router.get('/tags', getTags);

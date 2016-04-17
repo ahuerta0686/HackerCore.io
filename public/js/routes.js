@@ -17,13 +17,17 @@ angular.module('HackerCore.io').config(['$stateProvider', '$urlRouterProvider',
                 controller: 'DashboardCtrl',
                 controllerAs: 'vm'
             })
-            .state('tables', {
-                url: '/tables',
-                templateUrl: 'templates/tables.html'
+            .state('heatmap', {
+                url: '/heatmap',
+                templateUrl: 'templates/heatmap.html',
+                controller: 'HeatmapCtrl',
+                controllerAs: 'vm'
             })
             .state('popular-tags', {
                 url: '/popularTags',
-                templateUrl: 'templates/popularTags.html'
+                templateUrl: 'templates/popularTags.html',
+                controller: 'PopularTagsCtrl',
+                controllerAs: 'vm'
             })
             .state('winning-projects', {
                 url: '/winningProjects',

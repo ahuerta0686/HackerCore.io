@@ -13,18 +13,26 @@
   <!-- endbuild -->
   <!-- SCRIPTS -->
   <!-- build:js lib/js/main.min.js -->
+  <script type="text/javascript" src="components/lodash/dist/lodash.min.js"></script>
   <script type="text/javascript" src="components/angular/angular.min.js"></script>
   <script type="text/javascript" src="components/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
   <script type="text/javascript" src="components/angular-cookies/angular-cookies.min.js"></script>
   <script type="text/javascript" src="components/angular-ui-router/release/angular-ui-router.min.js"></script>
+  <script type="text/javascript" src="components/angular-simple-logger/dist/angular-simple-logger.min.js"></script>
+  <script type="text/javascript" src="components/angular-google-maps/dist/angular-google-maps.min.js"></script>
+  <script type="text/javascript" src="components/d3/d3.min.js"></script>
+  <script type="text/javascript" src="components/d3-cloud/build/d3.layout.cloud.js"></script>
   <!-- endbuild -->
   <!-- Custom Scripts -->
   <!-- <script type="text/javascript" src="js/dashboard.min.js"></script> -->
   <script type="text/javascript" src="js/module.js"></script>
   <script type="text/javascript" src="js/routes.js"></script>
+  <script type="text/javascript" src="js/controllers/login-ctrl.js"></script>
   <script type="text/javascript" src="js/controllers/alert-ctrl.js"></script>
   <script type="text/javascript" src="js/controllers/master-ctrl.js"></script>
   <script type="text/javascript" src="js/controllers/dashboard-ctrl.js"></script>
+  <script type="text/javascript" src="js/controllers/popular-tags-ctrl.js"></script>
+  <script type="text/javascript" src="js/controllers/heatmap-ctrl.js"></script>
   <script type="text/javascript" src="js/controllers/manage-ctrl.js"></script>
   <script type="text/javascript" src="js/directives/loading.js"></script>
   <script type="text/javascript" src="js/directives/widget-body.js"></script>
@@ -32,10 +40,15 @@
   <script type="text/javascript" src="js/directives/widget-header.js"></script>
   <script type="text/javascript" src="js/directives/widget.js"></script>
   <script type="text/javascript" src="js/services/hackathon.js"></script>
+  <script type="text/javascript" src="js/services/project.js"></script>
+  <script type="text/javascript" src="js/services/user.js"></script>
 
   <link rel="stylesheet" type="text/css" href="css/style.css">
 </head>
-<body ng-controller="MasterCtrl">
+<body ng-controller="MasterCtrl as vm">
+  <div ng-show="vm.loading" class="busy-overlay"></div>
+  <rd-loading ng-show="vm.loading"></rd-loading>
+
   <div id="page-wrapper" ng-class="{'open': toggle}" ng-cloak>
 
     <!-- Sidebar -->
@@ -52,10 +65,10 @@
           <a href="#">Dashboard <span class="menu-icon fa fa-tachometer"></span></a>
         </li>
         <li class="sidebar-list">
-          <a href="#/tables">Heat Map <span class="menu-icon fa fa-map"></span></a>
+          <a href ui-sref="heatmap">Hot Spots <span class="menu-icon fa fa-map"></span></a>
         </li>
 		<li class="sidebar-list">
-          <a href="#/popularTags">Popular Tags <span class="menu-icon fa fa-thumbs-up"></span></a>
+          <a href="#/popularTags">Trendy Tags <span class="menu-icon fa fa-thumbs-up"></span></a>
         </li>
 		<li class="sidebar-list">
           <a href="#/winningProjects">Winning Projects <span class="menu-icon fa fa-trophy"></span></a>
@@ -101,9 +114,23 @@
                 <a href="#" class="dropdown-toggle" uib-dropdown-toggle>
                   <img src="img/avatar.jpg">
                 </a>
-                <ul class="dropdown-menu dropdown-menu-right">
+                <!-- Logged Out Dropdown -->
+                <ul ng-hide="loggedIn" class="dropdown-menu dropdown-menu-right">
                   <li class="dropdown-header">
-                    Joe Bloggs
+                    NOT LOGGED IN
+                  </li>
+                  <li class="divider"></li>
+                  <li class="link">
+                    <a href ng-click="vm.openLogin()">
+                      Login
+                    </a>
+                  </li>
+                </ul>
+
+                <!-- Logged In Dropdown -->
+                <ul ng-show="loggedIn" class="dropdown-menu dropdown-menu-right">
+                  <li class="dropdown-header">
+                    {{ username }}
                   </li>
                   <li class="divider"></li>
                   <li class="link">
@@ -111,25 +138,15 @@
                       Profile
                     </a>
                   </li>
-                  <li class="link">
-                    <a href="#">
-                      Menu Item
-                    </a>
-                  </li>
-                  <li class="link">
-                    <a href="#">
-                      Menu Item
-                    </a>
-                  </li>
                   <li class="divider"></li>
                   <li class="link">
-                    <a href="#">
+                    <a href ng-click="vm.logout()">
                       Logout
                     </a>
                   </li>
                 </ul>
               </div>
-              <div class="item dropdown" uib-dropdown>
+              <div ng-show="loggedIn" class="item dropdown" uib-dropdown>
                <a href="#" class="dropdown-toggle" uib-dropdown-toggle>
                   <i class="fa fa-bell-o"></i>
                 </a>
@@ -138,8 +155,11 @@
                     Notifications
                   </li>
                   <li class="divider"></li>
-                  <li>
+                  <!-- <li>
                     <a href="#">Server Down!</a>
+                  </li> -->
+                  <li ng-repeat="notification in notifications">
+                  	<a href ui-sref="{{ notification.state }}">{{ notification.message }}</a>
                   </li>
                 </ul>
               </div>

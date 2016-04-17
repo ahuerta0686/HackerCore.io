@@ -1,29 +1,29 @@
 angular
 	.module('HackerCore.io')
-	.factory('hackathonservice', HackathonService);
+	.factory('userservice', UserService);
 
+UserService.$inject = ['$http', '$q'];
 
-HackathonService.$inject = ['$http', '$q'];
-
-function HackathonService($http, $q) {
-
-	var baseUrl = '/api/hackathon';
+function UserService($http, $q) {
+	var baseUrl = '/api/user';
 
 	return {
-		addHackathon: addHackathon,
-		countHackathons: countHackathons,
-		locations: locations,
-		searchHackathons: searchHackathons
+		login: login,
+		loginStatus: loginStatus,
+		logout: logout,
+		me: me,
+		notifications: notifications
 	};
 
-	function addHackathon(slug) {
+	function login(username, password) {
 		var deferred = $q.defer();
 
 		var data = {
-			slug: slug
+			username: username,
+			password: password
 		};
 
-		$http.post(baseUrl + '/new', data)
+		$http.post(baseUrl + '/login', data)
 		.then(function (response) {
 			deferred.resolve(response.data);
 		})
@@ -34,10 +34,10 @@ function HackathonService($http, $q) {
 		return deferred.promise;
 	}
 
-	function countHackathons() {
+	function loginStatus() {
 		var deferred = $q.defer();
 
-		$http.get(baseUrl + '/count')
+		$http.get(baseUrl + '/status')
 		.then(function (response) {
 			deferred.resolve(response.data);
 		})
@@ -48,14 +48,10 @@ function HackathonService($http, $q) {
 		return deferred.promise;
 	}
 
-	function searchHackathons(query) {
+	function logout() {
 		var deferred = $q.defer();
 
-		var data = {
-			query: query
-		};
-
-		$http.post(baseUrl + '/search', data)
+		$http.post(baseUrl + '/logout')
 		.then(function (response) {
 			deferred.resolve(response.data);
 		})
@@ -66,10 +62,24 @@ function HackathonService($http, $q) {
 		return deferred.promise;
 	}
 
-	function locations() {
+	function me() {
 		var deferred = $q.defer();
 
-		$http.get(baseUrl + '/locations')
+		$http.get(baseUrl + '/me')
+		.then(function (response) {
+			deferred.resolve(response.data);
+		})
+		.catch(function (response) {
+			deferred.reject(response.data);
+		});
+
+		return deferred.promise;
+	}
+
+	function notifications() {
+		var deferred = $q.defer();
+
+		$http.get(baseUrl + '/notifications')
 		.then(function (response) {
 			deferred.resolve(response.data);
 		})

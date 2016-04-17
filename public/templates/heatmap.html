@@ -1,0 +1,9 @@
+<div class="row">
+  <div class="col-lg-12">
+    <h2>Hackathon Heatmap</h2>
+    <p>Visualize the hottest locations for hackathons!</p>
+    <ui-gmap-google-map center='vm.map.center' zoom='vm.map.zoom'>
+      <ui-gmap-layer namespace="visualization" type="HeatmapLayer" show="vm.map.showHeat" onCreated="vm.map.heatLayerCallback"></ui-gmap-layer>
+    </ui-gmap-google-map>
+  </div>
+</div>

@@ -4,18 +4,34 @@ var mongoose = require('mongoose'),
 
 var UserSchema = new Schema({
 	username: String,
-	password: String
+	password: String,
+	notifications: [{
+		message: String,
+		state: String
+	}]
 });
 
 UserSchema.set('toJSON', {
 	transform: function (doc, ret, options) {
 		var retJSON = {
 			_id: ret._id,
-			username: ret.username
+			username: ret.username,
+			notifications: ret.notifications
 		};
 		return retJSON;
 	}
 });
+
+UserSchema.methods.pushNotification = function (message, state) {
+	var user = this;
+
+	user.notifications.unshift({
+		message: message,
+		state: state
+	});
+
+	return user.save();
+};
 
 UserSchema.methods.generateHash = function(password) {
 	return bcrypt.hashSync(password, bcrypt.genSaltSync(8), null);

@@ -1,6 +1,10 @@
 <!--Popular Tags-->
 <div class="row">
+	<div ng-show="vm.loading" class="busy-overlay"></div>
+	<rd-loading ng-show="vm.loading"></rd-loading>
 	<div class="col-lg-12">
-		<h1>Popular Tags</h1>
+		<h2>Popular Tags</h2>
+		<p>These are popular tags based on Devpost submissions from various hackathons you selected.</p>
+		<div id="popular-cloud"></div>
 	</div>
 </div>

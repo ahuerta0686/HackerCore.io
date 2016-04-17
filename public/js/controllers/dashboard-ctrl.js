@@ -6,13 +6,14 @@ angular
 	.module('HackerCore.io')
 	.controller('DashboardCtrl', DashboardCtrl);
 
-DashboardCtrl.$inject = ['hackathonservice'];
+DashboardCtrl.$inject = ['hackathonservice', 'projectservice'];
 
-function DashboardCtrl(hackathonservice) {
+function DashboardCtrl(hackathonservice, projectservice) {
 	var vm = this;
 
 	vm.loading = false;
 	vm.numHackathons = 0;
+	vm.numProjects = 0;
 
 	activate();
 
@@ -21,6 +22,11 @@ function DashboardCtrl(hackathonservice) {
 		hackathonservice.countHackathons()
 		.then(function (data) {
 			vm.numHackathons = data.count;
+
+			return projectservice.countProjects();
+		})
+		.then(function (data) {
+			vm.numProjects = data.count;
 		})
 		.catch(function (error) {
 			console.log(error);
