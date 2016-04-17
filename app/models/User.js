@@ -33,6 +33,14 @@ UserSchema.methods.pushNotification = function (message, state) {
 	return user.save();
 };
 
+UserSchema.methods.dismissNotification = function (index) {
+	var user = this;
+
+	user.notifications.splice(index, 1);
+
+	return user.save();
+};
+
 UserSchema.methods.generateHash = function(password) {
 	return bcrypt.hashSync(password, bcrypt.genSaltSync(8), null);
 };

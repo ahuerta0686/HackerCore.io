@@ -6,14 +6,15 @@ angular
 	.module('HackerCore.io')
 	.controller('DashboardCtrl', DashboardCtrl);
 
-DashboardCtrl.$inject = ['hackathonservice', 'projectservice'];
+DashboardCtrl.$inject = ['$scope', '$timeout', 'hackathonservice', 'projectservice'];
 
-function DashboardCtrl(hackathonservice, projectservice) {
+function DashboardCtrl($scope, $timeout, hackathonservice, projectservice) {
 	var vm = this;
 
 	vm.loading = false;
 	vm.numHackathons = 0;
 	vm.numProjects = 0;
+	vm.alerts = [];
 
 	activate();
 

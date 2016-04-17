@@ -30,7 +30,10 @@ var ProjectSchema = new Schema({
         avatarUrl: String,
         username: String,
         fullName: String
-    }]
+    }],
+    numMembers: Number,
+    numLikes: Number,
+    numComments: Number
 });
 
 ProjectSchema.statics.findByDevpostSlug = function (slug) {
@@ -53,6 +56,7 @@ ProjectSchema.statics.findAllByHackathon = function (hackathon) {
     devpost.hackathon.projects.all(hackathon)
     .then(function (projects) {
         var promises = [];
+
         projects.forEach(function (project) {
             promises.push(devpost.project.findBySlug(project.slug));
         });

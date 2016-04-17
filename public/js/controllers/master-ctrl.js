@@ -11,6 +11,47 @@ function MasterCtrl($rootScope, $scope, $cookieStore, $uibModal, userservice) {
     vm.loggedIn = $rootScope.loggedIn;
     vm.openLogin = openLogin;
     vm.logout = logout;
+    vm.dismissNotification = dismissNotification;
+    vm.addAlert = addAlert;
+    vm.closeAlert = closeAlert;
+    vm.alerts = [];
+
+    var socket = io();
+
+    socket.on('push notification', function (data) {
+        if (data.username == $rootScope.username) {
+            $rootScope.notifications.unshift({
+                message: data.message,
+                state: data.state
+            });
+
+            vm.alerts.unshift({
+                message: data.message,
+                type: data.type
+            });
+        }
+    });
+
+    function addAlert(message, type) {
+        console.log("Hi");
+        vm.alerts.unshift({
+            message: message,
+            type: 'success'
+        });
+    };
+
+    function closeAlert(index) {
+        vm.alerts.splice(index, 1);
+    };
+
+    function dismissNotification(index) {
+        socket.emit('dismiss notification', {
+            index: index,
+            username: $rootScope.username
+        });
+
+        $rootScope.notifications.splice(index, 1);
+    }
 
     function openLogin() {
         var modalInstance = $uibModal.open({

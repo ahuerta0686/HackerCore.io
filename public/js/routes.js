@@ -24,14 +24,16 @@ angular.module('HackerCore.io').config(['$stateProvider', '$urlRouterProvider',
                 controllerAs: 'vm'
             })
             .state('popular-tags', {
-                url: '/popularTags',
+                url: '/populartags',
                 templateUrl: 'templates/popularTags.html',
                 controller: 'PopularTagsCtrl',
                 controllerAs: 'vm'
             })
             .state('winning-projects', {
-                url: '/winningProjects',
-                templateUrl: 'templates/winningProjects.html'
+                url: '/popularprojects',
+                templateUrl: 'templates/winningProjects.html',
+                controller: 'WinningProjectsCtrl',
+                controllerAs: 'vm'
             })
             .state('calendar', {
                 url: '/calendar',

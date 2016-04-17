@@ -46,6 +46,6 @@ function HeatmapCtrl(hackathonservice, uiGmapGoogleMapApi) {
 
 	    var pointArray = new google.maps.MVCArray(hackathonData);
 	    heatLayer.setData(pointArray);
-	    heatLayer.set('radius', heatLayer.get('radius') ? null : 20);
+	    heatLayer.set('radius', heatLayer.get('radius') ? null : 30);
     }
 }

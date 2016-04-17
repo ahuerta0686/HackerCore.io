@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-	<title>RDash AngularJS</title>
+	<title>HackerCore.io</title>
   <!-- STYLES -->
   <!-- build:css lib/css/main.min.css -->
   <link rel="stylesheet" type="text/css" href="components/bootstrap/dist/css/bootstrap.min.css">
@@ -22,6 +22,7 @@
   <script type="text/javascript" src="components/angular-google-maps/dist/angular-google-maps.min.js"></script>
   <script type="text/javascript" src="components/d3/d3.min.js"></script>
   <script type="text/javascript" src="components/d3-cloud/build/d3.layout.cloud.js"></script>
+  <script type="text/javascript" src="/socket.io/socket.io.js"></script>
   <!-- endbuild -->
   <!-- Custom Scripts -->
   <!-- <script type="text/javascript" src="js/dashboard.min.js"></script> -->
@@ -33,6 +34,7 @@
   <script type="text/javascript" src="js/controllers/dashboard-ctrl.js"></script>
   <script type="text/javascript" src="js/controllers/popular-tags-ctrl.js"></script>
   <script type="text/javascript" src="js/controllers/heatmap-ctrl.js"></script>
+  <script type="text/javascript" src="js/controllers/winning-projects-ctrl.js"></script>
   <script type="text/javascript" src="js/controllers/manage-ctrl.js"></script>
   <script type="text/javascript" src="js/directives/loading.js"></script>
   <script type="text/javascript" src="js/directives/widget-body.js"></script>
@@ -68,10 +70,10 @@
           <a href ui-sref="heatmap">Hot Spots <span class="menu-icon fa fa-map"></span></a>
         </li>
 		<li class="sidebar-list">
-          <a href="#/popularTags">Trendy Tags <span class="menu-icon fa fa-thumbs-up"></span></a>
+          <a href ui-sref="popular-tags">Trendy Tags <span class="menu-icon fa fa-thumbs-up"></span></a>
         </li>
 		<li class="sidebar-list">
-          <a href="#/winningProjects">Winning Projects <span class="menu-icon fa fa-trophy"></span></a>
+          <a href ui-sref="winning-projects">Popular Projects <span class="menu-icon fa fa-trophy"></span></a>
         </li>
 		<li class="sidebar-list">
           <a href="#/calendar">Event Calendar <span class="menu-icon fa fa-calendar-times-o"></span></a>
@@ -159,7 +161,7 @@
                     <a href="#">Server Down!</a>
                   </li> -->
                   <li ng-repeat="notification in notifications">
-                  	<a href ui-sref="{{ notification.state }}">{{ notification.message }}</a>
+                  	<a href ng-click="vm.dismissNotification($index)">{{ notification.message }}</a>
                   </li>
                 </ul>
               </div>
@@ -177,6 +179,12 @@
         <!-- End Header Bar -->
 
         <!-- Main Content -->
+        <div class="row alerts-container">
+		  <div class="col-xs-12">
+		  	<uib-alert ng-repeat="alert in vm.alerts" type="success" close="vm.closeAlert($index)">{{ alert.message }}</uib-alert>
+		    <!-- <uib-alert data-ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">{{alert.msg}}</uib-alert> -->
+		  </div>
+		</div>
         <div ui-view></div>
 
       </div><!-- End Page Content -->

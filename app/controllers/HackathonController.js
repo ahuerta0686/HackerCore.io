@@ -5,9 +5,12 @@ var express = require('express'),
 	Q = require('q'),
 	rp = require('request-promise');
 
+var io = undefined;
+
 var googleApiKey = 'AIzaSyDUQnw4P70FMsSsepIcA2Y32pirhn5o2Dc';
 
-module.exports = function (app) {
+module.exports = function (app, _io) {
+	io = _io;
 	app.use('/api/hackathon', router);
 };
 
@@ -38,8 +41,14 @@ function postNew(request, response, next) {
 			return rp(geocodeUrl + hackathon.location.address);
 		else if (hackathon.location.name.length)
 			return rp(geocodeUrl + hackathon.location.name);
-		else
+		else {
 			request.user.pushNotification('Successfully retrieved hackathon and all of it\'s projects!', 'index');
+			io.emit('push notification', {
+				username: request.user.username,
+				message: "Successfully retrieved hackathon and all of it's projects!",
+				state: 'index'
+			});
+		}
 	})
 	.then(function (result) {
 		Hackathon.findOne({slug: request.body.slug}).exec(function (error, hackathon) {
@@ -58,10 +67,21 @@ function postNew(request, response, next) {
 	})
 	.then(function (result) {
 		request.user.pushNotification('Successfully retrieved hackathon and all of it\'s projects!', 'index');
+		io.emit('push notification', {
+			username: request.user.username,
+			message: "Successfully retrieved hackathon and all of it's projects!",
+			state: 'index'
+		});
 	})
 	.catch(function (error) {
 		console.log(error);
 		request.user.pushNotification('Unsuccessfully retrieved hackathon...', 'index');
+		io.emit('push notification', {
+			username: request.user.username,
+			message: "Unsuccessfully retrieved hackathon...",
+			state: 'index',
+			status: 'danger'
+		});
 		// return response.status(500).json({error: true});
 	});
 };

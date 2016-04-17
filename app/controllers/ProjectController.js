@@ -77,7 +77,18 @@ function getTags(request, response, next) {
 	});
 };
 
+function getWinners(request, response, next) {
+	Project.find({ winnings: { $exists: true, $ne: [] } }).exec()
+	.then(function (projects) {
+		return response.json(projects)
+	})
+	.catch(function (error) {
+		return response.status(500).json({error: true});
+	});
+}
+
 router.post('/new', postNew);
 router.post('/update', postUpdate);
 router.get('/count', getCount);
 router.get('/tags', getTags);
+router.get('/winners', getWinners);
