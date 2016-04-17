@@ -6,7 +6,7 @@ angular
 	.module('HackerCore.io')
 	.controller('ManageCtrl', ManageCtrl);
 
-ManageCtrl.$inject = ['hackathonservice']
+ManageCtrl.$inject = ['hackathonservice'];
 
 function ManageCtrl(hackathonservice) {
 	var vm = this;

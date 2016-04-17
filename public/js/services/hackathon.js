@@ -11,6 +11,7 @@ function HackathonService($http, $q) {
 
 	return {
 		addHackathon: addHackathon,
+		countHackathons: countHackathons,
 		searchHackathons: searchHackathons
 	};
 
@@ -22,6 +23,20 @@ function HackathonService($http, $q) {
 		};
 
 		$http.post(baseUrl + '/new', data)
+		.then(function (response) {
+			deferred.resolve(response.data);
+		})
+		.catch(function (response) {
+			deferred.reject(response.data);
+		});
+
+		return deferred.promise;
+	}
+
+	function countHackathons() {
+		var deferred = $q.defer();
+
+		$http.get(baseUrl + '/count')
 		.then(function (response) {
 			deferred.resolve(response.data);
 		})

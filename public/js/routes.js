@@ -13,7 +13,9 @@ angular.module('HackerCore.io').config(['$stateProvider', '$urlRouterProvider',
         $stateProvider
             .state('index', {
                 url: '/',
-                templateUrl: 'templates/dashboard.html'
+                templateUrl: 'templates/dashboard.html',
+                controller: 'DashboardCtrl',
+                controllerAs: 'vm'
             })
             .state('tables', {
                 url: '/tables',

@@ -83,6 +83,16 @@ function postSearch(request, response, next) {
 	});
 };
 
+function getCount(request, response, next) {
+	Hackathon.count({}, function (error, count) {
+		if (error)
+			return next(error);
+
+		return response.json({count: count});
+	});
+};
+
 router.post('/new', postNew);
 router.post('/update', postUpdate);
 router.post('/search', postSearch);
+router.get('/count', getCount);
